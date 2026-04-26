@@ -1,6 +1,7 @@
 import { User } from "./types";
 import { isActiveUser } from "./user";
 import { roleHasPermission, ResourceType, Action } from "./permissions";
+import { AuthorizationError } from "./errors";
 
 export interface AuthContext {
   actor: User;
@@ -23,8 +24,6 @@ export function assertCanAccess(
   action: Action
 ): void {
   if (!canAccessResource(actor, resource, action)) {
-    throw new Error(
-      `User ${actor.id} (${actor.role}) cannot ${action} ${resource}`
-    );
+    throw new AuthorizationError(actor.id, resource, action);
   }
 }

@@ -51,3 +51,27 @@ assertCanAccess(actor, "workspace", "manage");
 | admin | read write delete manage | read write delete manage | read write delete manage | read manage |
 | editor | read write delete | read write | read | — |
 | viewer | read | read | — | — |
+
+## API: Update User
+
+`handleUpdateUserRequest` runs validation and authorization in one call.
+
+```ts
+import { handleUpdateUserRequest } from "./src/api";
+
+const result = handleUpdateUserRequest({
+  actor: currentUser,
+  targetUserId: req.params.id,
+  payload: req.body,
+});
+// result: { userId, changes, updatedBy }
+```
+
+Throws `ValidationError` for bad input, `AuthorizationError` for permission failures.
+Both error types carry structured metadata (`field`, `code`, `actorId`, `resource`, `action`).
+
+### Validation rules
+
+- `id` — required, 2–64 chars, lowercase alphanumeric + `-` or `_`
+- `name` — non-empty string, trimmed
+- `role` / `status` — must be a valid enum value; only `admin` can change these fields
