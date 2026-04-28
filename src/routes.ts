@@ -51,3 +51,12 @@ export function getRoutePermission(
 ): RoutePermission | undefined {
   return ROUTES.find((r) => r.path === path && r.method === method)?.permission;
 }
+
+export const USER_LIST_ROUTES: RouteMeta[] = [
+  {
+    path: "/users",
+    method: "GET",
+    permission: { resource: "user", action: "read" },
+    description: "List users with search and pagination",
+  },
+];
