@@ -75,3 +75,23 @@ Both error types carry structured metadata (`field`, `code`, `actorId`, `resourc
 - `id` — required, 2–64 chars, lowercase alphanumeric + `-` or `_`
 - `name` — non-empty string, trimmed
 - `role` / `status` — must be a valid enum value; only `admin` can change these fields
+
+## UI: User Management Panel
+
+`UserManagementPanel` renders a user table with inline editing. Edit controls are
+shown or hidden based on the actor's permissions via `canAccessResource`.
+
+```tsx
+import { UserManagementPanel } from "./ui/UserManagementPanel";
+
+<UserManagementPanel
+  users={teamMembers}
+  actor={currentUser}
+  onUsersChange={setTeamMembers}
+/>
+```
+
+- Admins see an **Edit** button on every row; editors and viewers do not.
+- Clicking Edit opens `EditUserModal`, which validates changes with `validateUpdateUserPayload` before submitting.
+- Role selector is only rendered when the actor is an `admin`.
+- `useUpdateUser` hook wraps `handleUpdateUserRequest` and surfaces `AuthorizationError` as a human-readable banner.
