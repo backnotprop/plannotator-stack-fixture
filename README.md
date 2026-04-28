@@ -27,3 +27,27 @@ const user = createUser({
 | `isActiveUser(user)` | Check active status |
 | `formatDisplayName(user)` | Name or email prefix |
 | `formatUserLabel(user)` | `"Name (Role)"` string |
+
+## Authorization
+
+Access control is role-based. Suspended users are always denied.
+
+```ts
+import { canAccessResource, assertCanAccess } from "./src/auth";
+
+// boolean check
+if (!canAccessResource(actor, "document", "write")) {
+  return res.status(403).json({ error: "Forbidden" });
+}
+
+// throwing guard (use inside request handlers)
+assertCanAccess(actor, "workspace", "manage");
+```
+
+### Permission Matrix
+
+| Role | document | workspace | user | billing |
+|---|---|---|---|---|
+| admin | read write delete manage | read write delete manage | read write delete manage | read manage |
+| editor | read write delete | read write | read | — |
+| viewer | read | read | — | — |
